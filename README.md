@@ -73,4 +73,4 @@ Go to the previous slide with any of the following key sequences:
 - Powered by [vadimdemedes/ink](https://github.com/vadimdemedes/ink)
 - Inspired by [maaslalani/slides](https://github.com/maaslalani/slides)
 - [mikaelbr/marked-terminal](https://github.com/mikaelbr/marked-terminal)
-- [codechalk](https://github.com/a20185/codechalk)
+- [a20185/codechalk](https://github.com/a20185/codechalk)
