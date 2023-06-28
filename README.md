@@ -37,7 +37,7 @@ setTimeout(() => {
 }, 200);
 ```
 
-You can execute code inside your slides by pressing \`<C-e>\`,
+You can execute code inside your slides by pressing `<C-e>`,
 the output of your command will be displayed at the end of the current slide.
 
 ---
