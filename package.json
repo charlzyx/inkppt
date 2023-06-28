@@ -5,6 +5,7 @@
     "name": "charlzyx",
     "email": "charlzyx@qq.com"
   },
+  "bin": "build/index.js",
   "type": "module",
   "engines": {
     "node": ">=16"
