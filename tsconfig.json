@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "Node16",
+    "target": "ES2022",
+    "esModuleInterop": true,
+    "moduleResolution": "Node16",
+    "moduleDetection": "force",
+    // "allowImportingTsExtensions": true,
+    // "noEmit": true,
+    "skipLibCheck": true,
+    "jsx": "react-jsx",
+    "outDir": "build",
+  },
+  "include": ["src"]
+}
