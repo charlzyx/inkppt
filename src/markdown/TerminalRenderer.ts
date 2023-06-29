@@ -407,23 +407,6 @@ export class TerminalRenderer extends Renderer {
     helper.generateTableRow(body, this.transform).forEach(function(row) {
       table.push(row);
     });
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
-    console.log("table render");
     return helper.section(opts.table(table.toString()));
   }
   tablerow(content: string) {

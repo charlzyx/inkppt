@@ -2,7 +2,7 @@ import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
 import { highlight } from "../chalkcode/index.js";
 import type { getInkPPTConfig } from "../config.js";
-import { TerminalRenderer } from "./renderer.js";
+import { TerminalRenderer } from "./TerminalRenderer.js";
 
 marked.use(gfmHeadingId());
 

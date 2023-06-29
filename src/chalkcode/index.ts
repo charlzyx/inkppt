@@ -6,12 +6,10 @@ export async function highlight(
   options: HighlighterOptions = {},
   codeText: string,
   languageType: ShikiLanguageType = "javascript",
-  themeType: ShikiThemeType = "monokai",
+  themeType: ShikiThemeType = "github-dark",
 ) {
   const codeTokens = await generateCodeTokens(options, codeText, languageType, themeType);
   if (!codeTokens) return codeText;
   const renderedResult = renderCodeTokens(codeTokens);
   return renderedResult;
 }
-
-export { configureShiki } from "./config.js";

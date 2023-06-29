@@ -20,7 +20,7 @@ shiki:
 
 这是一个基于 [ink](https://github.com/vadimdemedes/ink) 开发的命令行工具, 他能够将 markdown 文件像 PPT 一样在终端渲染
 
-## ![hello](./docs/hello.gif)
+## ![hello](./assets/hello.gif)
 
 ---
 
@@ -74,6 +74,9 @@ console.log("hello");
 setTimeout(() => {
   console.log("say hi");
 }, 200);
+setTimeout(() => {
+  throw new Error("SHOW ERROR");
+}, 300);
 ```
 
 ---
@@ -82,7 +85,7 @@ setTimeout(() => {
 
 - 回到首页 `g` `g`
 - 到最后一页 `G`
-- 数字键 直接跳转到对应页面 （超过 10 页面按下 `ctrl`）
+- 数字键 直接跳转到对应页面
 - 后一页 `space` | `right` | `down` | `enter` | `n` | `j` | `l` | `Page Down`
 - 前一页 `left` | `up` | `p` | `h` | `k` | `N` | `Page Up`
 

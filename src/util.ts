@@ -1,3 +1,4 @@
+import fs from "fs";
 import { Key } from "ink";
 import { useStdout } from "ink";
 import yaml from "js-yaml";
@@ -10,19 +11,22 @@ export const RUNABLE = {
   mjs: /mjs/,
 };
 
-export const onKey = (input: string, key: Key, len: number, cur: number) => {
+export const KEY_WAITING = 200;
+export const onKey = (input: string, key: Key, len: number, cur: number, last: {
+  input: string;
+  time: number;
+}) => {
   if (/\d/.test(input)) {
-    let n = Math.max(0, +input - 1);
-    if (key.ctrl) {
-      n = n + 10;
-    }
+    const pred = /\d/.test(last.input) && (+Date.now() - last.time < KEY_WAITING);
+    const pre: number = pred ? +last.input : 0;
+    let n = Math.max(0, (pre * 10) + +input - 1);
     const isNext = n > cur;
     const isPrev = n < cur;
     if (isPrev) {
       n = Math.min(n, cur);
     }
     if (isNext) {
-      n = Math.min(cur + n, len - 1);
+      n = Math.min(n, len - 1);
     }
     return n;
   }
