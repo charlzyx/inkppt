@@ -8,7 +8,7 @@ export async function highlight(
   languageType: ShikiLanguageType = "javascript",
   themeType: ShikiThemeType = "monokai",
 ) {
-  const codeTokens = await generateCodeTokens(codeText, languageType, themeType);
+  const codeTokens = await generateCodeTokens(options, codeText, languageType, themeType);
   if (!codeTokens) return codeText;
   const renderedResult = renderCodeTokens(codeTokens);
   return renderedResult;

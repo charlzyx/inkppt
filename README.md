@@ -1,9 +1,16 @@
 ---
 shiki:
   langs:
-    - js
+    - javascript
+    - css
+    - html
+    - vue
+    - markdown
+    - typescript
     - jsx
-    - md
+    - tsx
+    - bash
+    - console
   themes:
     - github-dark
     - github-light
@@ -74,8 +81,8 @@ setTimeout(() => {
 ## 快捷键
 
 - 回到首页 `g` `g`
-- 到最后一页 `G` `shift`
-- 数字键 直接跳转到对应页面 （超过 10 页面按下 shift）
+- 到最后一页 `G`
+- 数字键 直接跳转到对应页面 （超过 10 页面按下 `ctrl`）
 - 后一页 `space` | `right` | `down` | `enter` | `n` | `j` | `l` | `Page Down`
 - 前一页 `left` | `up` | `p` | `h` | `k` | `N` | `Page Up`
 

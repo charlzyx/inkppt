@@ -13,7 +13,7 @@ export const RUNABLE = {
 export const onKey = (input: string, key: Key, len: number, cur: number) => {
   if (/\d/.test(input)) {
     let n = Math.max(0, +input - 1);
-    if (key.shift) {
+    if (key.ctrl) {
       n = n + 10;
     }
     const isNext = n > cur;

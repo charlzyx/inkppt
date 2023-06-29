@@ -1,11 +1,11 @@
 import chalk from "chalk";
 import dayjs from "dayjs";
-import { Box, Key, Text, useInput } from "ink";
+import { Box, Text, useInput } from "ink";
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { getInkPPTConfig } from "./config.js";
 import { exec } from "./exec.js";
 import { remark } from "./markdown/index.js";
-import { onKey, RUNABLE, short, useStdoutDimensions } from "./util.js";
+import { RUNABLE, onKey, short, useStdoutDimensions } from "./util.js";
 
 const AppContext = createContext({
   config: getInkPPTConfig(),
@@ -115,10 +115,10 @@ export const App = (props: {
     const to = onKey(input, key, len, page);
     setPage(to);
 
-    if (input == "g" && last.current.input == "g" && timing < 500) {
+    if (!key.shift && input == "g" && last.current.input == "g" && timing < 500) {
       // gg to start
       setPage(0);
-    } else if (input == "g" && key.shift) {
+    } else if (input == "G") {
       // G to END
       setPage(len - 1);
     }
@@ -153,7 +153,7 @@ export const App = (props: {
   return (
     <AppContext.Provider value={cache}>
       <Box height={height} width={width} padding={1} flexDirection="column">
-        <Text italic>[{page + 1} / {len}]</Text>
+        <Text italic>[{page + 1} / {len}] </Text>
         <Markdown key={page}>
           {current}
         </Markdown>

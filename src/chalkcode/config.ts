@@ -1,8 +1,7 @@
-import { merge } from "merge";
 import { HighlighterOptions } from "shiki";
 
 let shikiConfig = {
-  langs: ["javascript", "css", "html", "vue", "markdown", "typescript", "jsx", "tsx"],
+  langs: ["console", "bash", "javascript", "css", "html", "vue", "markdown", "typescript", "jsx", "tsx"],
   themes: ["monokai", "one-dark-pro", "material-theme"],
 } as HighlighterOptions;
 
@@ -18,8 +17,12 @@ export function getShikiConfig(): HighlighterOptions {
  * @param {Partial<HighlighterOptions>} [config] ShikiHighlighterConfig
  */
 export function configureShiki(config?: Partial<HighlighterOptions>) {
-  const targetConfig = config ?? {};
-  shikiConfig = merge(shikiConfig, targetConfig);
+  shikiConfig = {
+    ...shikiConfig,
+    ...config,
+    langs: Array.from(new Set([...shikiConfig.langs, ...config.langs])),
+    themes: Array.from(new Set([...shikiConfig.themes, ...config.themes])),
+  };
 }
 
 export const ShikiThemeTokenFontStyleTypes = {
@@ -30,7 +33,6 @@ export const ShikiThemeTokenFontStyleTypes = {
   Underline: 4,
 } as const;
 
-export type ExcludeUndefined<T> = T extends (infer R | undefined) ? ExcludeUndefined<R> : T;
 export function nonUndefined<T>(param: T | undefined): T {
   return param as T;
 }
