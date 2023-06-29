@@ -1,7 +1,9 @@
+import { HighlighterOptions } from "shiki";
 import { renderCodeTokens } from "./renderer.js";
 import { generateCodeTokens, ShikiLanguageType, ShikiThemeType } from "./tokenizer.js";
 
 export async function highlight(
+  options: HighlighterOptions = {},
   codeText: string,
   languageType: ShikiLanguageType = "javascript",
   themeType: ShikiThemeType = "monokai",

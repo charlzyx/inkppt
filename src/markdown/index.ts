@@ -1,13 +1,15 @@
-import { highlight } from "../chalkcode/index.js";
 import { marked } from "marked";
 import { gfmHeadingId } from "marked-gfm-heading-id";
-import { TerminalRenderer } from "./Renderer.js";
+import { highlight } from "../chalkcode/index.js";
+import type { getInkPPTConfig } from "../config.js";
+import { TerminalRenderer } from "./renderer.js";
 
 marked.use(gfmHeadingId());
 
 export const remark = (
   raw: string,
-  cache: {
+  options: {
+    config: ReturnType<typeof getInkPPTConfig>;
     get(raw: string): string;
     set(raw: string, code: string): void;
   } = null,
@@ -15,21 +17,22 @@ export const remark = (
 ): [string, Promise<string> | null] => {
   const opts: marked.MarkedOptions = {
     async walkTokens(token) {
-      if (token.type === "code" && token.lang) {
-        const hlcode = await highlight(token.text, token.lang);
+      if (token.type === "code") {
+        token.lang = token.lang || "console";
+        const hlcode = await highlight(options.config.shikiOptions, token.text, token.lang);
         if (walkCode) walkCode(token.text, token.lang);
         token.text = hlcode;
       }
     },
     mangle: false,
-    renderer: new TerminalRenderer(),
+    renderer: new TerminalRenderer({ width: options.config.width, height: options.config.height }),
   };
 
-  if (cache?.get(raw) && !walkCode) {
-    return [cache.get(raw), null];
-  } else if (cache?.get(raw)) {
+  if (options?.get(raw) && !walkCode) {
+    return [options.get(raw), null];
+  } else if (options?.get(raw)) {
     return [
-      cache.get(raw),
+      options.get(raw),
       // just for walkcode
       marked(raw, { ...opts, async: true }),
     ];
@@ -38,8 +41,8 @@ export const remark = (
   return [
     null,
     marked(raw, { ...opts, async: true }).then(rendered => {
-      if (cache) {
-        cache.set(raw, rendered);
+      if (options) {
+        options.set(raw, rendered);
       }
       return rendered;
     }),

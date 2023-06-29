@@ -1,32 +1,20 @@
-import { remark } from "./markdown/index.js";
 import chalk from "chalk";
 import dayjs from "dayjs";
-import { Box, render, Text, useInput } from "ink";
-import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { Box, Key, Text, useInput } from "ink";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { getInkPPTConfig } from "./config.js";
 import { exec } from "./exec.js";
+import { remark } from "./markdown/index.js";
+import { onKey, RUNABLE, short, useStdoutDimensions } from "./util.js";
 
-const CacheContext = createContext({
+const AppContext = createContext({
+  config: getInkPPTConfig(),
   get(raw: string) {
     return "";
   },
   set(raw: string, output: string) {
   },
 });
-
-const supported = {
-  ts: /ts|typescript/,
-  tsx: /tsx|typescriptreact/,
-  js: /js|javascript/,
-  mjs: /mjs/,
-};
-
-const short = (x: string) => {
-  return Object.keys(supported).reduce((suffix, ext) => {
-    if (suffix) return suffix;
-    const reg = supported[ext];
-    return reg.test(x) ? ext : suffix;
-  }, "");
-};
 
 const Output = (props: { code?: string; lang?: string }) => {
   const [outputs, setOuputs] = useState([]);
@@ -46,7 +34,7 @@ const Output = (props: { code?: string; lang?: string }) => {
   }, [props.code, props.lang]);
 
   return (
-    <Box borderStyle="classic" flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
+    <Box borderStyle="round" flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
       {outputs.length
         ? outputs.map(item => {
           return (
@@ -60,17 +48,16 @@ const Output = (props: { code?: string; lang?: string }) => {
   );
 };
 
-const Markdown = (props: { children: string; slient?: boolean }) => {
-  const [content, setContent] = useState(props.children);
+const Markdown = (props: { children: string }) => {
+  const [content, setContent] = useState("Coloring...");
   const [runable, setRunable] = useState(false);
   const [code, setCode] = useState<{ code: string; lang: string }>();
-  const codes = useRef<typeof code[]>([]);
-  const appCache = useContext(CacheContext);
+  const pickedCodesRef = useRef<typeof code[]>([]);
+  const appCache = useContext(AppContext);
 
   useInput((input, key) => {
-    if (props.slient) return;
     if (key.ctrl && input == "e") {
-      const code = codes.current[0];
+      const code = pickedCodesRef.current[0];
       if (!code) return;
       setCode(code);
     }
@@ -78,8 +65,8 @@ const Markdown = (props: { children: string; slient?: boolean }) => {
 
   useEffect(() => {
     const [cache, lazy] = remark(props.children, appCache, (code, lang) => {
-      codes.current.push({ code, lang: short(lang) });
-      setRunable(Boolean(code && supported[lang]));
+      pickedCodesRef.current.push({ code, lang: short(lang) });
+      setRunable(Boolean(code && RUNABLE[lang]));
     });
     if (cache) {
       setContent(cache);
@@ -91,7 +78,7 @@ const Markdown = (props: { children: string; slient?: boolean }) => {
   }, [props.children]);
 
   return (
-    <Box minHeight={10} justifyContent="center" flexDirection="column">
+    <Box minHeight={10} rowGap={0} justifyContent="center" flexDirection="column">
       <Text>{content}</Text>
       {runable
         ? <Output code={code?.code} lang={code?.lang}></Output>
@@ -102,36 +89,38 @@ const Markdown = (props: { children: string; slient?: boolean }) => {
 
 export const App = (props: {
   children: string;
+  meta?: Partial<ReturnType<typeof getInkPPTConfig>>;
 }) => {
   const slides = useMemo(() => {
-    return props.children.trim().split("---").filter(Boolean);
+    return props.children.trim().split(/\n---\n/).filter(Boolean);
   }, [props.children]);
+
+  const len = slides.length;
+
   const [page, setPage] = useState(0);
   const last = useRef({ input: null, time: 0 });
+  const [width, height] = useStdoutDimensions();
 
   const current = useMemo(() => {
     return slides[page];
   }, [page]);
 
   useInput((input, key) => {
-    const prev = () => {
-      setPage(page - 1 < 0 ? slides.length - 1 : page - 1);
-    };
-    const next = () => {
-      setPage(page + 1 > slides.length - 1 ? 0 : page + 1);
-    };
     const now = +Date.now();
     const timing = now - last.current.time;
 
     last.current.input = input;
     last.current.time = now;
 
-    if (key.downArrow || key.pageDown || key.rightArrow) {
-      next();
-    } else if (key.upArrow || key.pageUp || key.leftArrow) {
-      prev();
-    } else if (input == "g" && last.current.input == "g" && timing < 500) {
+    const to = onKey(input, key, len, page);
+    setPage(to);
+
+    if (input == "g" && last.current.input == "g" && timing < 500) {
+      // gg to start
       setPage(0);
+    } else if (input == "g" && key.shift) {
+      // G to END
+      setPage(len - 1);
     }
   });
 
@@ -139,6 +128,12 @@ export const App = (props: {
 
   const cache = useMemo(() => {
     return {
+      config: {
+        ...getInkPPTConfig(),
+        ...props.meta,
+        width,
+        height,
+      },
       get(raw: string) {
         return memo.current[raw];
       },
@@ -146,22 +141,23 @@ export const App = (props: {
         memo.current[raw] = output;
       },
     };
-  }, []);
+  }, [width, height, props.meta]);
 
   useEffect(() => {
+    // clear cache
+    memo.current = {};
     // run cache
     slides.forEach(section => remark(section, cache));
-  }, [slides]);
+  }, [slides, width, height]);
 
   return (
-    <CacheContext.Provider value={cache}>
-      <Box flexDirection="column">
-        <Text>[{page + 1} / {slides.length}]</Text>
+    <AppContext.Provider value={cache}>
+      <Box height={height} width={width} padding={1} flexDirection="column">
+        <Text italic>[{page + 1} / {len}]</Text>
         <Markdown key={page}>
           {current}
         </Markdown>
       </Box>
-    </CacheContext.Provider>
+    </AppContext.Provider>
   );
 };
-// render(React.createElement(App, { children: `# Hello ` }));

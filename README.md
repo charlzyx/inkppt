@@ -1,34 +1,66 @@
-# inkppt
+---
+shiki:
+  langs:
+    - js
+    - jsx
+    - md
+  themes:
+    - github-dark
+    - github-light
+---
 
-![hello](./docs/hello.gif)
+# inkppt 墨水 PPT
 
-## Usage
+这是一个基于 [ink](https://github.com/vadimdemedes/ink) 开发的命令行工具, 他能够将 markdown 文件像 PPT 一样在终端渲染
+
+## ![hello](./docs/hello.gif)
+
+---
+
+# 欢迎使用 [inkppt 墨水 PPT]
+
+这是一个基于 [ink](https://github.com/vadimdemedes/ink) 开发的命令行工具
+
+---
+
+## Usage 使用方法
 
 ```bash
-npx inkppt path/of/file.md
+# 如果没有指定文件， 默认是 process.cwd()
+# 如果是文件夹， 默认读取 /readme|home|index/i.md
+# 如果没有上述文件，那么就读取 fs.readdirSync() 获取到的第一个md 文件
+npx inkppt [path/of/file.md]
 ```
 
-A terminal based ppt like tool
+### 使用 `---` 作为分页标记,包含以下功能
 
-# Welcome to inkppt
-
-A terminal based ppt like tool
-
----
-
-## Everything is markdown
-
-In fact, this entire presentation is a markdown file.
+- [x] 代码高亮
+- [x] 键盘导航
+- [x] **可执行**代码片段(js/ts/jsx/tsx)
+- [x] 支持 Markdown metadata 配置
 
 ---
 
-## Everything happens in your terminal
+## 技术栈
 
-Create slides and present them without ever leaving your terminal.
+表格也是支持的
+
+| 仓库                                         | 功能               |
+| -------------------------------------------- | ------------------ |
+| [marked](https://github.com/markedjs/marked) | 解析 markdown 文件 |
+| [chalk](https://github.com/chalk/chalk)      | 终端输出着色       |
+| [shiki](https://github.com/shikijs/shiki)    | 代码高亮           |
+| [tsx](https://github.com/esbuild-kit/tsx)    | 执行代码片段       |
 
 ---
 
-## Code execution
+## 图片/视频暂时还不支持奥
+
+![就这玩意儿也能跑过我？](https://avatars.githubusercontent.com/u/18055018?v=4)
+
+---
+
+## 可执行代码片段, `ctrl` + `E`
 
 ```js
 console.log("hello");
@@ -37,39 +69,20 @@ setTimeout(() => {
 }, 200);
 ```
 
-You can execute code inside your slides by pressing \`<C-e>\`,
-the output of your command will be displayed at the end of the current slide.
+---
+
+## 快捷键
+
+- 回到首页 `g` `g`
+- 到最后一页 `G` `shift`
+- 数字键 直接跳转到对应页面 （超过 10 页面按下 shift）
+- 后一页 `space` | `right` | `down` | `enter` | `n` | `j` | `l` | `Page Down`
+- 前一页 `left` | `up` | `p` | `h` | `k` | `N` | `Page Up`
 
 ---
 
-## Keybindings
-
-Go to the first slide with the following key sequence:
-* <kbd>g</kbd> <kbd>g</kbd>
-
-Go to the next slide with any of the following key sequences:
-<!-- * <kbd>space</kbd> -->
-* <kbd>right</kbd>
-* <kbd>down</kbd>
-<!-- * <kbd>enter</kbd> -->
-<!-- * <kbd>n</kbd> -->
-<!-- * <kbd>j</kbd> -->
-<!-- * <kbd>l</kbd> -->
-* <kbd>Page Down</kbd>
-<!-- * number + any of the above (go forward n slides) -->
-
-Go to the previous slide with any of the following key sequences:
-* <kbd>left</kbd>
-* <kbd>up</kbd>
-<!-- * <kbd>p</kbd> -->
-<!-- * <kbd>h</kbd> -->
-<!-- * <kbd>k</kbd> -->
-<!-- * <kbd>N</kbd> -->
-* <kbd>Page Up</kbd>
-<!-- * number + any of the above (go back n slides) -->
-
-
 # Thanks
+
 - Powered by [vadimdemedes/ink](https://github.com/vadimdemedes/ink)
 - Inspired by [maaslalani/slides](https://github.com/maaslalani/slides)
 - [mikaelbr/marked-terminal](https://github.com/mikaelbr/marked-terminal)

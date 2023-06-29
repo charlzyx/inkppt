@@ -19,18 +19,20 @@
     "build": "tsc"
   },
   "devDependencies": {
-    "@types/react": "^18.2.14",
     "@types/marked": "^5.0.0",
     "@types/node": "^20.3.2",
+    "@types/react": "^18.2.14",
     "typescript": "latest"
   },
   "dependencies": {
+    "@types/js-yaml": "^4.0.5",
     "ansi-escapes": "^6.2.0",
     "chalk": "^5.2.0",
     "cli-table3": "^0.6.3",
     "dayjs": "^1.11.8",
     "dprint": "^0.37.1",
     "ink": "^4.2.0",
+    "js-yaml": "^4.1.0",
     "marked": "^5.1.0",
     "marked-gfm-heading-id": "^3.0.4",
     "merge": "^2.1.1",

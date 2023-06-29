@@ -2,7 +2,7 @@ import { merge } from "merge";
 import { HighlighterOptions } from "shiki";
 
 let shikiConfig = {
-  langs: ["javascript", "css", "html", "vue-html", "typescript", "jsx", "tsx"],
+  langs: ["javascript", "css", "html", "vue", "markdown", "typescript", "jsx", "tsx"],
   themes: ["monokai", "one-dark-pro", "material-theme"],
 } as HighlighterOptions;
 
